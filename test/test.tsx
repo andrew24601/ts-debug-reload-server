@@ -10,3 +10,7 @@ export function test() {
 
     return <div>Helloes world {()=>time}</div>
 }
+
+export function test2() {
+    return <a href="#">Go here</a>
+}

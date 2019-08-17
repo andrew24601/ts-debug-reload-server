@@ -4,7 +4,7 @@
 var http = require('http');
 const fs = require('fs');
 const path = require('path');
-const WebSocketServer = require('websocket').server;
+const WebSocket = require('ws');
 const transpile = require('./transpile');
 
 const hotReloadCompiled = fs.readFileSync(__dirname + "/HotReloader.js", "utf-8");
@@ -201,7 +201,7 @@ let authors = [];
 function broadcast(skip, msg) {
     for (let idx = 0; idx < authors.length; idx++) {
         if (authors[idx] !== skip) {
-            authors[idx].connection.sendUTF(JSON.stringify([msg]));
+            authors[idx].connection.send(JSON.stringify([msg]));
         }
     }
 }
@@ -247,14 +247,11 @@ exports.startServer = function (port, host, rootDir, out) {
 		socket.on('close', ()=>liveSockets.delete(socket));
 	});
 
-    const wsServer = new WebSocketServer({
-        httpServer: server,
-        autoAcceptConnections: false
+    const wsServer = new WebSocket.Server({
+        server
     });
 
-    wsServer.on('request', function (request) {
-        var connection = request.accept('reload-protocol', request.origin);
-
+    wsServer.on('connection', function (connection) {
         let author = {
             connection
         };
