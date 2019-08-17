@@ -273,7 +273,7 @@ exports.stopServer = function() {
         outChannel(`server closed`);
     });
     for (const sock of liveSockets.keys()) {
-        sock.destroy();
+        sock.terminate();
     }
     liveSockets.clear();
 
