@@ -22,6 +22,14 @@ function addExplicitExtension(path) {
     return path;
 }
 
+function fixRelativePath(relativePath) {
+    if (relativePath.startsWith(".")) {
+        return relativePath;
+    } else {
+        return "./" + relativePath;
+    }
+}
+
 exports.transpileFile = function(sourcePath) {
     const folder = path.dirname(sourcePath);
     const config = tsconfig.getConfig(folder);
@@ -39,17 +47,12 @@ exports.transpileFile = function(sourcePath) {
         moduleResolver(name) {
             if (name.startsWith(".")) {
                 const target = addExplicitExtension(path.join(folder, name));
-                const relativePath = path.relative(folder, target).split('\\').join('/');
-                if (relativePath.startsWith(".")) {
-                    return relativePath;
-                } else {
-                    return "./" + relativePath;
-                }
+                return fixRelativePath(path.relative(folder, target).split('\\').join('/'));
             } else {
                 const match = tsconfig.resolve(config, name);
 
                 if (match != null) {
-                    return path.relative(folder, addExplicitExtension(match)).split('\\').join('/');
+                    return fixRelativePath(path.relative(folder, addExplicitExtension(match)).split('\\').join('/'));
                 } else {
                     return name;
                 }
