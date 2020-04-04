@@ -74,11 +74,16 @@ function _handleTypescriptFile(localPath, request, response) {
 }
 
 function serveTypescriptFile(path, request, response) {
-    if (path.endsWith(".ts") || path.endsWith(".tsx")) {
-        if (_handleTypescriptFile(path, request, response)) {
-            return true;
+    if (path.endsWith(".js")) {
+        const basepath = path.substring(0, path.length - 3);
+        if (fs.existsSync(basepath + ".ts")) {
+            return _handleTypescriptFile(basepath + ".ts", request, response);
+        }
+        if (fs.existsSync(basepath + ".tsx")) {
+            return _handleTypescriptFile(basepath + ".tsx", request, response);
         }
     }
+
     return false;
 }
 
