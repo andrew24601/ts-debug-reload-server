@@ -38,8 +38,9 @@ exports.transpileFile = function(sourcePath) {
     function transformBefore(context) {
         const visit = (node) => {
             if (ts.isImportDeclaration(node)) {
+                if (node.importClause.isTypeOnly)
+                    return undefined;
                 const specifier = node.moduleSpecifier.text;
-
                 if (specifier.startsWith(".")) {
                     const target = addExplicitExtension(path.join(folder, specifier));
                     return ts.createImportDeclaration(null, null, node.importClause, ts.createStringLiteral(fixRelativePath(path.relative(folder, target).split('\\').join('/'))));
@@ -63,6 +64,8 @@ exports.transpileFile = function(sourcePath) {
     }
 
     let jsxFactory = config.config.compilerOptions.jsxFactory;
+
+    console.log("*" + sourcePath)
 
     let result = ts.transpileModule(source, {
         fileName: sourcePath,
