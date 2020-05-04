@@ -1,6 +1,6 @@
 {
   "name": "ts-debug-reload-server",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "TypeScript debug hot reload server",
   "main": "server.js",
   "scripts": {
