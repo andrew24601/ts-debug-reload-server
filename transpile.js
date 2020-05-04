@@ -3,21 +3,8 @@ const fs = require('fs');
 const tsconfig = require("./tsconfig");
 const ts = require("typescript");
 
-
-function addExplicitExtension(path) {
+function addExplicitExtension(path) {    
     if (fs.existsSync(path) && path.endsWith(".css")) {
-        return path + ".js";
-    }
-    if (fs.existsSync(path)) {
-        return path;
-    }
-    if (fs.existsSync(path + ".ts")) {
-        return path + ".js";
-    }
-    if (fs.existsSync(path + ".js")) {
-        return path + ".js";
-    }
-    if (fs.existsSync(path + ".tsx")) {
         return path + ".js";
     }
     return path;
@@ -38,11 +25,12 @@ exports.transpileFile = function(sourcePath) {
     function transformBefore(context) {
         const visit = (node) => {
             if (ts.isImportDeclaration(node)) {
-                if (node.importClause.isTypeOnly)
+                if (node.importClause && node.importClause.isTypeOnly)
                     return undefined;
                 const specifier = node.moduleSpecifier.text;
                 if (specifier.startsWith(".")) {
                     const target = addExplicitExtension(path.join(folder, specifier));
+
                     return ts.createImportDeclaration(null, null, node.importClause, ts.createStringLiteral(fixRelativePath(path.relative(folder, target).split('\\').join('/'))));
                 } else {
                     const match = tsconfig.resolve(config, specifier);
@@ -65,42 +53,17 @@ exports.transpileFile = function(sourcePath) {
 
     let jsxFactory = config.config.compilerOptions.jsxFactory;
 
-    console.log("*" + sourcePath)
-
     let result = ts.transpileModule(source, {
         fileName: sourcePath,
         compilerOptions: { module: ts.ModuleKind.ES2020, target: "ES2020",
             inlineSourceMap: true,
             inlineSources: true,
+            importsNotUsedAsValues: "remove",
             jsx: 2, jsxFactory: jsxFactory ? jsxFactory : "React.createElement" },
         transformers: {
-            before: [transformBefore]
+            after: [transformBefore]
         }
     });
 
     return result.outputText;
-
-/*
-    return sucrase.transform(source, {
-        transforms: ["typescript", "jsx"],
-        filePath: sourcePath,
-        jsxPragma: jsxFactory ? jsxFactory : "React.createElement",
-        moduleResolver(name) {
-            if (name.startsWith(".")) {
-                const target = addExplicitExtension(path.join(folder, name));
-                return fixRelativePath(path.relative(folder, target).split('\\').join('/'));
-            } else {
-                const match = tsconfig.resolve(config, name);
-
-                if (match != null) {
-                    return fixRelativePath(path.relative(folder, addExplicitExtension(match)).split('\\').join('/'));
-                } else {
-                    return name;
-                }
-            }
-        }
-    }).code;
-    */
 }
-
-

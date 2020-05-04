@@ -53,19 +53,19 @@ function tryResolve(pattern, paths, baseUrl, name) {
         }
 
         if (fs.existsSync(resolved + ".ts")) {
-            return resolved + ".ts";
+            return resolved;
         }
         if (fs.existsSync(resolved + ".tsx")) {
-            return resolved + ".tsx";
+            return resolved;
         }
         if (fs.existsSync(resolved + "/index.ts")) {
-            return resolved + "/index.ts";
+            return resolved + "/index";
         }
         if (fs.existsSync(resolved + "/index.js")) {
             return resolved + "/index.js";
         }
         if (fs.existsSync(resolved + "/index.tsx")) {
-            return resolved + "/index.tsx";
+            return resolved + "/index";
         }
 
         const packagePath = path.resolve(resolved, "package.json");

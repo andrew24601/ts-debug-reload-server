@@ -24,7 +24,9 @@ const mimeLookup = {
 	".html": "text/html;charset=utf-8",
 	".png": "image/png",
 	".jpg": "image/jpeg",
-	".svg": "image/svg+xml"
+    ".svg": "image/svg+xml",
+    ".ico": "image/vnd.microsoft.icon",
+    ".gif": "image/gif"
 };
 
 function addWatcher(path) {
@@ -35,7 +37,6 @@ function addWatcher(path) {
         notifyChange(path);
     })
 }
-
 
 function _handleTypescriptFile(localPath, request, response) {
     if (fs.existsSync(localPath)) {
@@ -74,16 +75,12 @@ function _handleTypescriptFile(localPath, request, response) {
 }
 
 function serveTypescriptFile(path, request, response) {
-    if (path.endsWith(".js")) {
-        const basepath = path.substring(0, path.length - 3);
-        if (fs.existsSync(basepath + ".ts")) {
-            return _handleTypescriptFile(basepath + ".ts", request, response);
-        }
-        if (fs.existsSync(basepath + ".tsx")) {
-            return _handleTypescriptFile(basepath + ".tsx", request, response);
-        }
+    if (fs.existsSync(path + ".ts")) {
+        return _handleTypescriptFile(path + ".ts", request, response);
     }
-
+    if (fs.existsSync(path + ".tsx")) {
+        return _handleTypescriptFile(path + ".tsx", request, response);
+    }
     return false;
 }
 
@@ -140,7 +137,6 @@ const requestHandler = (request, response) => {
                 stats = undefined;
         }
     }
-
 
     if (stats !== undefined) {
         addWatcher(localPath);
