@@ -1,19 +1,14 @@
 import "./test.css"
-import { goTime, Bojo } from "./other";
-
-console.log("bob")
+import { goTime, Bojo, Colour } from "./other";
 
 class Test implements Bojo {
-    x = 5;
+    x = Colour.red;
 }
 
+console.log(Colour.green);
 export function test(name: string) {
     goTime();
     console.log("test");
     document.body.appendChild(document.createTextNode("bob"))
-
-
-
-
 //    document.body.appendChild(test2());
 }
