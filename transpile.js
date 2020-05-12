@@ -1,8 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const ts = require("typescript");
-const tsConfigPaths = require("tsconfig-paths");
-const JSON5 = require('json5');
+const tsConfigPaths = require("./tsconfig-paths");
 
 function addExplicitExtension(path) {    
     if (fs.existsSync(path) && path.endsWith(".css")) {
@@ -73,10 +72,8 @@ exports.transpileFile = function(sourcePath) {
     const source = fs.readFileSync(sourcePath, "utf-8");
 
     let jsxFactory = "React.createElement";
-    if (config.configFileAbsolutePath) {
-        const tsconfig = JSON5.parse(fs.readFileSync(config.configFileAbsolutePath, "utf-8"));
-        if (tsconfig && tsconfig.compilerOptions && tsconfig.compilerOptions.jsxFactory)
-            jsxFactory = tsconfig.compilerOptions.jsxFactory;
+    if (config.jsxFactory) {
+        jsxFactory = config.jsxFactory;
     }
 
     let result = ts.transpileModule(source, {
