@@ -177,7 +177,7 @@ const requestHandler = (request, response) => {
             </head>
             <body>
             <script type="module">
-            import {${method}} from "../${path.basename(parentFile)}";
+            import {${method}} from "../${path.basename(parentFile, path.extname(parentFile))}";
             const rv = ${method}();
             if (rv instanceof Element) {
                 document.body.appendChild(rv);
