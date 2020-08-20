@@ -26,6 +26,7 @@ const mimeLookup = {
 	".jpg": "image/jpeg",
     ".svg": "image/svg+xml",
     ".ico": "image/vnd.microsoft.icon",
+    ".wasm": "application/wasm",
     ".gif": "image/gif"
 };
 
@@ -126,6 +127,11 @@ const requestHandler = (request, response) => {
     }
 
     let stats;
+
+    if (!fs.existsSync(localPath) && fs.existsSync(localPath + ".js")) {
+        localPath += ".js";
+    }
+
 
     if (fs.existsSync(localPath)) {
         stats = fs.statSync(localPath);
