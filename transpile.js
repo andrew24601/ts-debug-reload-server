@@ -72,8 +72,10 @@ exports.transpileFile = function(sourcePath) {
     const source = fs.readFileSync(sourcePath, "utf-8");
 
     let jsxFactory = "React.createElement";
+    let jsxFragmentFactory;
     if (config.jsxFactory) {
         jsxFactory = config.jsxFactory;
+        jsxFragmentFactory = config.jsxFragmentFactory;
     }
 
     let result = ts.transpileModule(source, {
@@ -83,7 +85,8 @@ exports.transpileFile = function(sourcePath) {
             inlineSources: true,
             importsNotUsedAsValues: "remove",
             jsx: 2,
-            jsxFactory
+            jsxFactory,
+            jsxFragmentFactory
         },
         transformers: {
             after: [transformBefore]

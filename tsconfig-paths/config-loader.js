@@ -53,6 +53,7 @@ function configLoader(_a) {
         absoluteBaseUrl: absoluteBaseUrl,
         jsx: loadResult.jsx,
         jsxFactory: loadResult.jsxFactory,
+        jsxFragmentFactory: loadResult.jsxFragmentFactory,
         paths: loadResult.paths || {}
     };
 }

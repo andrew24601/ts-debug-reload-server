@@ -30,7 +30,8 @@ function loadSyncDefault(cwd, filename) {
             baseUrl: undefined,
             paths: undefined,
             jsx: undefined,
-            jsxFactory: undefined
+            jsxFactory: undefined,
+            jsxFragmentFactory: undefined
         };
     }
     var config = loadTsconfig(configPath);
@@ -39,7 +40,8 @@ function loadSyncDefault(cwd, filename) {
         baseUrl: config && config.compilerOptions && config.compilerOptions.baseUrl,
         paths: config && config.compilerOptions && config.compilerOptions.paths,
         jsx: config && config.compilerOptions && config.compilerOptions.jsx,
-        jsxFactory: config && config.compilerOptions && config.compilerOptions.jsxFactory
+        jsxFactory: config && config.compilerOptions && config.compilerOptions.jsxFactory,
+        jsxFragmentFactory: config && config.compilerOptions && config.compilerOptions.jsxFragmentFactory
     };
 }
 function resolveConfigPath(cwd, filename) {
